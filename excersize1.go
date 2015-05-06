@@ -11,31 +11,36 @@ type Multiplies struct {
 	max         int
 }
 
-func findMultipliesForInt(base int, multiplier int, max int) []int {
+type IntSet struct {
+	set map[int]bool
+}
+
+func NewIntSet() *IntSet {
+	return &IntSet{make(map[int]bool)}
+}
+
+func (set *IntSet) Add(i int) bool {
+	_, found := set.set[i]
+	set.set[i] = true
+	return !found //False if it existed already
+}
+
+func findMultipliesForInt(set *IntSet, base int, multiplier int, max int) {
 	if multiplier < max {
-		var x []int = make([]int, 0)
 		if max/multiplier > 0 {
-			x = append(x, multiplier)
+			set.Add(multiplier)
 		}
-		var y []int = findMultipliesForInt(base, base+multiplier, max)
-
-		return append(x, y...)
+		findMultipliesForInt(set, base, base+multiplier, max)
 	}
-	return []int{}
 }
 
-func findMultiplies(base int, multipliers int, max int) []int {
-	var x []int = make([]int, 0)
-	var value = findMultipliesForInt(base, multipliers, max)
-	x = append(x, value...)
-	return x
-}
-
-func calculateSum(values []int) int {
-	fmt.Println(values)
+func calculateSum(set *IntSet, max int) int {
+	fmt.Println(set)
 	var sum = 0
-	for i := range values {
-		sum += values[i]
+	for k, v := range set.set {
+		if v {
+			sum += k
+		}
 	}
 	fmt.Println(sum)
 	return sum
@@ -43,18 +48,12 @@ func calculateSum(values []int) int {
 
 func main() {
 	var m = Multiplies{multipliers: []int{3, 5}, max: 1000}
-	fmt.Println(10 / 3)
-	fmt.Println(m)
-
-	var sum int = 0
+	set := NewIntSet()
+	var max = m.max
 	for i := range m.multipliers {
 		var base = m.multipliers[i]
 		var multiplier = m.multipliers[i]
-		var max = m.max
-		var value = findMultipliesForInt(base, multiplier, max)
-
-		sum = sum + calculateSum(value)
+		findMultipliesForInt(set, base, multiplier, max)
 	}
-
-	fmt.Println(sum)
+	fmt.Println("som:", calculateSum(set, max))
 }
