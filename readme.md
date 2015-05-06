@@ -1,0 +1,1 @@
+export GOPATH=/Users/ernstvorsteveld/private/go/euler/
