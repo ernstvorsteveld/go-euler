@@ -1,8 +1,8 @@
 package main
 
 import (
+	"euler.1/mulitpliers"
 	"fmt"
-	"mulitpliers"
 )
 
 func main() {
